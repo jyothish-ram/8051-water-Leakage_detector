@@ -1,0 +1,184 @@
+A51 MACRO ASSEMBLER  WATERLEAKAGE                                                         08/13/2022 19:35:34 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\waterLeakage.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE waterLeakage.a51 SET(SMALL) DEBUG PRINT(.\Listings\waterLeakage.lst) OB
+                      JECT(.\Objects\waterLeakage.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     org 00h
+                       2     
+                       3     
+                       4     
+                       5     
+                       6     
+                       7     
+0000 C2A6              8             CLR P2.6
+0002 758956            9             mov tmod,#01010110B
+                      10             
+0005 7438             11             Mov A, #38H      
+0007 1182             12             ACALL com    
+0009 740E             13             MOV A, #0EH    
+000B 1182             14             ACALL com    
+000D 7480             15             MOV A, #80H    
+000F 1182             16             ACALL com  
+0011 7401             17             MOV A, #01H      
+0013 1182             18             ACALL com   
+                      19     
+0015 900027           20             MOV DPTR ,#welSTR
+0018 7400             21             wel : MOV A,#00H   
+001A 93               22             MOVC A,@A+DPTR    
+001B 6005             23             JZ FINS      
+001D 118D             24             ACALL L_D    
+001F A3               25             INC DPTR    
+0020 80F6             26             SJMP wel    
+0022 1198             27             FINS: acall DEL_ROUTINE 
+0024 020037           28             lJMP again
+0027 43484543         29             welSTR: DB'CHECKING STATUS',0
+002B 4B494E47                
+002F 20535441                
+0033 54555300                
+                      30                     
+                      31                     
+0037 758A00           32     again:mov tl0,#00h  
+003A 758B00           33             mov tl1,#00h
+003D 75F000           34             mov b,#00h
+0040 D28C             35     back:setb tr0  
+0042 D28E             36             setb tr1  
+0044 E58A             37             mov a,tl0
+0046 858BF0           38             mov b,tl1
+0049 B40AF4           39             cjne a, #10, back  
+004C E58B             40             mov a, tl1
+004E B50502           41             cjne a, 5, not_equal
+0051 8006             42             sjmp leak_found
+0053 5002             43     not_equal: jnc next  
+0055 8002             44             sjmp leak_found
+0057 8004             45     next: sjmp no_leak  
+                      46     
+0059 D2A6             47     leak_found:setb P2.6 
+005B 8004             48             sjmp disp_leak
+                      49     
+005D C2A6             50     no_leak:CLR P2.6
+005F 8052             51             sjmp disp_noleak
+                      52     
+                      53     
+0061 7438             54     disp_leak:Mov A, #38H      
+A51 MACRO ASSEMBLER  WATERLEAKAGE                                                         08/13/2022 19:35:34 PAGE     2
+
+0063 1182             55             ACALL com    
+0065 740E             56             MOV A, #0EH    
+0067 1182             57             ACALL com    
+0069 7480             58             MOV A, #80H    
+006B 1182             59             ACALL com  
+006D 7401             60             MOV A, #01H      
+006F 1182             61             ACALL com   
+                      62     
+0071 9000A1           63             MOV DPTR ,#STR
+0074 7400             64             REV : MOV A,#00H   
+0076 93               65             MOVC A,@A+DPTR    
+0077 6005             66             JZ FINISH      
+0079 118D             67             ACALL L_D    
+007B A3               68             INC DPTR    
+007C 80F6             69             SJMP REV    
+007E 1198             70             FINISH:acall DEL_ROUTINE 
+0080 80B5             71             SJMP again    
+                      72     
+0082 1198             73             com: ACALL DEL_ROUTINE  
+0084 F590             74             MOV P1, A   
+0086 C2A1             75             CLR P2.1    
+0088 D2A2             76             SETB P2.2
+008A C2A2             77             CLR P2.2   
+008C 22               78             RET    
+                      79     
+008D 1198             80             L_D: ACALL DEL_ROUTINE  
+008F F590             81             MOV P1, A      
+0091 D2A1             82             SETB P2.1     
+0093 D2A2             83             SETB P2.2     
+0095 C2A2             84             CLR P2.2     
+0097 22               85             RET       
+                      86     
+0098 78FF             87             DEL_ROUTINE: MOV R0, #0FFH  
+009A 79FF             88             L1: MOV R1, #0FFH   
+009C D9FE             89             L2: DJNZ R1, L2    
+009E D8FA             90             DJNZ R0, L1
+00A0 22               91             RET       
+00A1 21214C45         92             STR: DB'!!LEAKAGE FOUND!!',0
+00A5 414B4147                
+00A9 4520464F                
+00AD 554E4421                
+00B1 2100                    
+                      93                     
+00B3 7438             94     disp_noleak:Mov A, #38H      
+00B5 1182             95             ACALL com    
+00B7 740E             96             MOV A, #0EH    
+00B9 1182             97             ACALL com    
+00BB 7480             98             MOV A, #80H    
+00BD 1182             99             ACALL com  
+00BF 7401            100             MOV A, #01H      
+00C1 1182            101             ACALL com   
+                     102     
+00C3 9000D5          103             MOV DPTR ,#noSTR
+00C6 7400            104             Rit : MOV A,#00H   
+00C8 93              105             MOVC A,@A+DPTR    
+00C9 6005            106             JZ FIN      
+00CB 118D            107             ACALL L_D    
+00CD A3              108             INC DPTR    
+00CE 80F6            109             SJMP Rit    
+00D0 1198            110             FIN: acall DEL_ROUTINE 
+00D2 020037          111             lJMP again
+00D5 4E4F204C        112             noSTR: DB'NO LEAKAGE FOUND',0
+00D9 45414B41                
+00DD 47452046                
+00E1 4F554E44                
+00E5 00                      
+A51 MACRO ASSEMBLER  WATERLEAKAGE                                                         08/13/2022 19:35:34 PAGE     3
+
+                     113                     
+                     114     
+                     115     end
+A51 MACRO ASSEMBLER  WATERLEAKAGE                                                         08/13/2022 19:35:34 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+AGAIN. . . . . . .  C ADDR   0037H   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+BACK . . . . . . .  C ADDR   0040H   A   
+COM. . . . . . . .  C ADDR   0082H   A   
+DEL_ROUTINE. . . .  C ADDR   0098H   A   
+DISP_LEAK. . . . .  C ADDR   0061H   A   
+DISP_NOLEAK. . . .  C ADDR   00B3H   A   
+FIN. . . . . . . .  C ADDR   00D0H   A   
+FINISH . . . . . .  C ADDR   007EH   A   
+FINS . . . . . . .  C ADDR   0022H   A   
+L1 . . . . . . . .  C ADDR   009AH   A   
+L2 . . . . . . . .  C ADDR   009CH   A   
+LEAK_FOUND . . . .  C ADDR   0059H   A   
+L_D. . . . . . . .  C ADDR   008DH   A   
+NEXT . . . . . . .  C ADDR   0057H   A   
+NOSTR. . . . . . .  C ADDR   00D5H   A   
+NOT_EQUAL. . . . .  C ADDR   0053H   A   
+NO_LEAK. . . . . .  C ADDR   005DH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+REV. . . . . . . .  C ADDR   0074H   A   
+RIT. . . . . . . .  C ADDR   00C6H   A   
+STR. . . . . . . .  C ADDR   00A1H   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+WEL. . . . . . . .  C ADDR   0018H   A   
+WELSTR . . . . . .  C ADDR   0027H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
